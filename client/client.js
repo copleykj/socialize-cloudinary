@@ -4,6 +4,7 @@ import { Mongo } from 'meteor/mongo';
 import { Promise } from 'meteor/promise';
 
 import './versionCheck.js';
+import cloudinaryCore from 'cloudinary-core'; // eslint-disable-line
 
 const callWithPromise = (method, ...myParameters) => new Promise((resolve, reject) => {
     Meteor.call(method, ...myParameters, (err, res) => {
@@ -11,9 +12,6 @@ const callWithPromise = (method, ...myParameters) => new Promise((resolve, rejec
         resolve(res);
     });
 });
-
-
-const cloudinaryCore = require('cloudinary-core');
 
 const Cloudinary = {
     collection: new Mongo.Collection('_cloudinary', {
@@ -51,44 +49,43 @@ const Cloudinary = {
         const result = await callWithPromise('cloudinary.delete_by_publicId', publicId, type);
         return result;
     },
-    uploadFiles(files, { groupId = 'general', options = {}, callback }) {
-        const uploadResults = [];
-        if (files instanceof File || files instanceof Blob) {
+    uploadFiles(files, config = { groupId: 'general', options: {}, callback: null }) {
+        let newFiles = files;
+
+        if (newFiles instanceof File || newFiles instanceof Blob) {
+            newFiles = [newFiles];
+        } else if (newFiles instanceof FileList) {
+            newFiles = Array.from(newFiles);
+        }
+
+        const uploadResults = newFiles.map(file => new Promise((resolve) => {
             const reader = new FileReader();
             reader.onload = async () => {
-                uploadResults.push(await this.uploadFile(reader.result, groupId, options, callback));
+                const response = await this.uploadFile(reader.result, config);
+                resolve(response);
             };
-            reader.readAsDataURL(files);
-        }
-        if (Array.isArray(files) || files instanceof FileList) {
-            const newFiles = Array.from(files);
-            newFiles.forEach((file) => {
-                const reader = new FileReader();
-                reader.onload = async () => {
-                    uploadResults.push(this.uploadFile(reader.result, groupId, options, callback));
-                };
-                reader.readAsDataURL(file);
-            });
-        }
+            reader.readAsDataURL(file);
+        }));
         return uploadResults;
     },
-    async uploadFile(file, groupId = 'general', ops = {}, callback) {
-        const result = await callWithPromise('cloudinary.sign', ops);
+    async uploadFile(dataUrl, config = { groupId: 'general', options: {}, callback: null }) {
+        const { groupId, options, callback } = config;
+        const result = await callWithPromise('cloudinary.sign', options);
         const self = this;
         return new Promise((resolve, reject) => {
             const formData = new FormData();
 
             // cloudinary.sign sends back all necessary form props we just need to append them to formData
-            result.hidden_fields.forEach((v, k) => formData.append(k, v));
+            Object.keys(result.hidden_fields).forEach(key => formData.append(key, result.hidden_fields[key]));
 
             // append the file
-            formData.append('file', file);
+            formData.append('file', dataUrl);
             // create a new XHR instace so we can send the data to cloudinary
             const xhr = new XMLHttpRequest();
             // set the inital record for the uploading file
             const collectionId = self.collection.insert({
                 status: 'uploading',
-                preview: file,
+                preview: dataUrl,
                 percent_uploaded: 0,
                 groupId,
             });
@@ -113,7 +110,7 @@ const Cloudinary = {
                             response,
                         },
                     });
-                    (callback && callback(null, response)) || resolve(response);
+                    return (callback && callback(null, response)) || resolve(response);
                 }
 
                 self.collection.upsert(collectionId, {
@@ -122,7 +119,7 @@ const Cloudinary = {
                         response,
                     },
                 });
-                (callback && callback(response, null)) || reject(response);
+                return (callback && callback(response, null)) || reject(response);
             });
             // listen for error event
             xhr.addEventListener('error', function onError() {
