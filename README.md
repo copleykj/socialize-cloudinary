@@ -3,10 +3,26 @@ This Package provides a simple way for uploading files to Cloudinary, which in t
 
 This project is based heavily on [lepozepo:cloudinary](https://github.com/Lepozepo/cloudinary/). Coffeescript has been converted to ES2015, Modules are now implemented, no more dependence on jQuery or Blaze, functions that call server methods now return promises, and client side cloudinary config has been tweaked to bring it in line with the server side implementation.
 
+- [Cloudinary Image/File Uploader](#cloudinary-imagefile-uploader)
+	- [Supporting the Project](#supporting-the-project)
+	- [Features](#features)
+	- [Installation](#installation)
+	- [Configuration](#configuration)
+	- [Uploading](#uploading)
+		- [Uploads Collection](#uploads-collection)
+	- [Manipulating and Displaying](#manipulating-and-displaying)
+	- [Deleting From Cloudinary](#deleting-from-cloudinary)
+	- [Generating A Download Link](#generating-a-download-link)
+	- [Compatibility](#compatibility)
+		- [Cordova Android Bug with Meteor 1.2+](#cordova-android-bug-with-meteor-12)
+	- [API](#api)
+
 ## Supporting the Project ##
 In the spirit of keeping this and all of the packages in the [Socialize](https://atmospherejs.com/socialize) set alive, I ask that if you find this package useful, please donate to it's development.
 
-Litecoin: LXLBD9sC5dV79eQkwj7tFusUHvJA5nhuD3 / [Patreon](https://www.patreon.com/user?u=4866588) / [Paypal](https://www.paypal.me/copleykj)
+![Litecoin](http://gdurl.com/xnOe)
+
+[Patreon](https://www.patreon.com/user?u=4866588) / [Paypal](https://www.paypal.me/copleykj)
 
 ## Features ##
 - Frontend agnostic
