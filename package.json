@@ -1,0 +1,30 @@
+{
+  "name": "@socialize/cloudinary",
+  "version": "1.0.0",
+  "description": "Meteor's socialize:cloudinary package ported for React Native",
+  "main": "entry-rn.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/copleykj/socialize-cloudinary.git"
+  },
+  "keywords": [
+    "meteor",
+    "socialize",
+    "cloudinary",
+    "react-native"
+  ],
+  "author": "Kelly Copley <copleykj@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/copleykj/socialize-cloudinary/issues"
+  },
+  "homepage": "https://github.com/copleykj/socialize-cloudinary#readme",
+  "dependencies": {
+    "@socialize/react-native-meteor": "^1.3.2",
+    "cloudinary-core": "^2.5.0",
+    "cloudinary": "^1.13.2"
+  }
+}
