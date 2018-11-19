@@ -1,11 +1,10 @@
-# Cloudinary API And Image/File Uploader #
+# Cloudinary API And Image/File Uploader
 This Package provides a simple way for uploading files to Cloudinary, which in turn can be set up to sync with your Amazon S3 service. This is useful for uploading and actively manipulating images and files that you want accessible to the public. Cloudinary is built on [Cloudinary (NPM)](https://github.com/cloudinary/cloudinary_npm) and [Cloudinary (JS)](https://github.com/cloudinary/cloudinary_core). These packages must be installed via `metoer npm install --save` command for this package to work.
-
-This project is based heavily on [lepozepo:cloudinary](https://github.com/Lepozepo/cloudinary/). Coffeescript has been converted to ES2015, Modules are now implemented, no more dependence on jQuery or Blaze, functions that call server methods now return promises, and client side cloudinary config has been tweaked to bring it in line with the server side implementation.
 
 >This is a [Meteor][meteor] package with part of it's code published as a companion NPM package made to work with React Native. This allows your Meteor and React Native projects that use this package to share code between them to give you a competitive advantage when bringing your mobile and web application to market.
 
 - [Cloudinary API And Image/File Uploader](#cloudinary-api-and-imagefile-uploader)
+	- [Prior Art](#prior-art)
 	- [Supporting the Project](#supporting-the-project)
 	- [Features](#features)
 	- [Installation](#installation)
@@ -18,6 +17,11 @@ This project is based heavily on [lepozepo:cloudinary](https://github.com/Lepoze
 	- [Compatibility](#compatibility)
 		- [Cordova Android Bug with Meteor 1.2+](#cordova-android-bug-with-meteor-12)
 	- [API](#api)
+
+## Prior Art
+
+This project is based heavily on [lepozepo:cloudinary](https://github.com/Lepozepo/cloudinary/). Coffeescript has been converted to ES2015, Modules are now implemented, no more dependence on jQuery or Blaze, functions that call server methods now return promises, and client side cloudinary config has been tweaked to bring it in line with the server side implementation.
+
 
 ## Supporting the Project ##
 In the spirit of keeping this and all of the packages in the [Socialize](https://atmospherejs.com/socialize) set alive, I ask that if you find this package useful, please donate to it's development.
