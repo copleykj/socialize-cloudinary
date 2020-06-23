@@ -1,5 +1,5 @@
 {
-  "name": "socialize/cloudinary",
+  "name": "@socialize/cloudinary",
   "version": "1.0.4",
   "description": "Meteor's socialize:cloudinary package ported for React Native",
   "main": "entry-rn.js",
