@@ -1,6 +1,6 @@
 {
-  "name": "@socialize/cloudinary",
-  "version": "1.0.2",
+  "name": "socialize/cloudinary",
+  "version": "1.0.4",
   "description": "Meteor's socialize:cloudinary package ported for React Native",
   "main": "entry-rn.js",
   "scripts": {
@@ -24,7 +24,7 @@
   "homepage": "https://github.com/copleykj/socialize-cloudinary#readme",
   "dependencies": {
     "@socialize/react-native-meteor": "^1.3.5",
-    "cloudinary-core": "^2.6.3",
-    "cloudinary": "^1.14.0"
+    "cloudinary-core": "^2.8.2",
+    "cloudinary": "^1.22.0"
   }
 }
