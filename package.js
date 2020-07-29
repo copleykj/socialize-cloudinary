@@ -6,7 +6,7 @@ Package.describe({
     git: 'https://github.com/copleykj/socialize-cloudinary',
 });
 
-Package.on_use(function _(api) {
+Package.onUse(function _(api) {
     api.versionsFrom('1.3');
 
     api.use(['meteor', 'ecmascript', 'mongo', 'check'], ['client', 'server']);
