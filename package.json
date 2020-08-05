@@ -26,5 +26,19 @@
     "@socialize/react-native-meteor": "^2.0.2",
     "cloudinary-core": "^2.11.1",
     "cloudinary": "^1.22.0"
-  }
+  },
+  "funding": [
+    {
+      "type" : "github",
+      "url" : "https://github.com/sponsors/copleykj"
+    },
+    {
+      "type" : "patreon",
+      "url" : "https://www.patreon.com/copleykj"
+    },
+    {
+      "type" : "paypal",
+      "url" : "https://www.paypal.me/copleykj"
+    }
+  ]
 }
