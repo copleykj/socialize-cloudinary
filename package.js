@@ -7,7 +7,7 @@ Package.describe({
 });
 
 Package.onUse(function _(api) {
-    api.versionsFrom('1.3');
+    api.versionsFrom('1.10.2');
 
     api.use(['meteor', 'ecmascript', 'mongo', 'check'], ['client', 'server']);
     api.use('tmeasday:check-npm-versions@0.3.2', ['client', 'server']);
