@@ -2,12 +2,12 @@
 Package.describe({
     name: 'socialize:cloudinary',
     summary: 'Upload and manipulate files with the Cloudinary API and async/await',
-    version: '1.0.4',
+    version: '1.0.5',
     git: 'https://github.com/copleykj/socialize-cloudinary',
 });
 
 Package.onUse(function _(api) {
-    api.versionsFrom('1.3');
+    api.versionsFrom('1.10.2');
 
     api.use(['meteor', 'ecmascript', 'mongo', 'check'], ['client', 'server']);
     api.use('tmeasday:check-npm-versions@0.3.2', ['client', 'server']);
