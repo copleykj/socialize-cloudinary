@@ -1,6 +1,6 @@
 # Cloudinary API And Image/File Uploader
 
-This Package provides a simple way for uploading files to Cloudinary, which in turn can be set up to sync with your Amazon S3 service. This is useful for uploading and actively manipulating images and files that you want accessible to the public. Cloudinary is built on [Cloudinary (NPM)](https://github.com/cloudinary/cloudinary_npm) and [Cloudinary (JS)](https://github.com/cloudinary/cloudinary_core). These packages must be installed via `metoer npm install --save` command for this package to work.
+This Package provides a simple way for uploading files to Cloudinary, which in turn can be set up to sync with your Amazon S3 service. This is useful for uploading and actively manipulating images and files that you want accessible to the public.
 
 >This is a [Meteor][meteor] package with part of it's code published as a companion NPM package made to work with React Native. This allows your Meteor and React Native projects that use this package to share code between them to give you a competitive advantage when bringing your mobile and web application to market.
 
@@ -40,6 +40,8 @@ Finding the time to maintain FOSS projects can be quite difficult. I am myself r
 - Client side signed uploads
 
 ## Installation
+
+Cloudinary is built on [Cloudinary (NPM)](https://github.com/cloudinary/cloudinary_npm) and [Cloudinary (JS)](https://github.com/cloudinary/cloudinary_core). These packages must be installed from NPM for this package to work.
 
 ``` sh
 meteor npm install --save cloudinary cloudinary-core
