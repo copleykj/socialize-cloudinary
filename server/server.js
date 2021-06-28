@@ -48,7 +48,8 @@ Meteor.methods({
         this.unblock();
         Cloudinary.rules.download_url.call(this, publicId);
         const format = ops.format || '';
-        return Cloudinary.utils.private_download_url(publicId, format, ops.filter(op => op !== 'format'));
+        delete ops.format;
+        return Cloudinary.utils.private_download_url(publicId, format, ops);
     },
 });
 
