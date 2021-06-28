@@ -2,13 +2,16 @@
 
 This Package provides a simple way for uploading files to Cloudinary, which in turn can be set up to sync with your Amazon S3 service. This is useful for uploading and actively manipulating images and files that you want accessible to the public.
 
->This is a [Meteor][meteor] package with part of it's code published as a companion NPM package made to work with React Native. This allows your Meteor and React Native projects that use this package to share code between them to give you a competitive advantage when bringing your mobile and web application to market.
+>This is a [Meteor][meteor] package with part of it's code published as a companion NPM package made to work with clients other than Meteor. For example your server is Meteor, but you want to build a React Native app for the client. This allows you to share code between your Meteor server and other clients to give you a competitive advantage when bringing your mobile and web application to market.
 
 <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 - [Prior Art](#prior-art)
 - [Supporting The Project](#supporting-the-project)
 - [Features](#features)
-- [Installation](#installation)
+- [Meteor Installation](#meteor-installation)
+- [NPM Installation](#npm-installation)
+- [Usage Outside Meteor](#usage-outside-meteor)
+  - [React Native](#react-native)
 - [Configuration](#configuration)
   - [Server](#server)
   - [Client](#client)
@@ -39,14 +42,36 @@ Finding the time to maintain FOSS projects can be quite difficult. I am myself r
 - Auththentication Rules
 - Client side signed uploads
 
-## Installation
+## Meteor Installation
 
 Cloudinary is built on [Cloudinary (NPM)](https://github.com/cloudinary/cloudinary_npm) and [Cloudinary (JS)](https://github.com/cloudinary/cloudinary_core). These packages must be installed from NPM for this package to work.
 
-``` sh
+``` shell
 meteor npm install --save cloudinary cloudinary-core
 meteor add socialize:cloudinary
 ```
+
+## NPM Installation
+
+When installing the npm package, npm takes care of installing cloudinary deps and theres no need to install them like is necessary inside the Meteor app.
+
+```shell
+npm install --save @socialize/cloudinary
+```
+
+## Usage Outside Meteor
+
+The client side parts of this package are published to NPM as `@socialize/cloudinary` for use in front ends outside of Meteor.
+
+When using the npm package you'll need to connect to a server, which hosts the server side Meteor code for your app, using `Meteor.connect` as per the [@socialize/react-native-meteor usage example](https://github.com/copleykj/react-native-meteor#example-usage) documentation.
+
+ ```javascript
+Meteor.connect('ws://192.168.X.X:3000/websocket');
+ ```
+
+### React Native
+
+When using this package with React Native there is some minor setup required by the `@socialize/react-native-meteor` package. See [@socialize/react-native-meteor react-native](https://github.com/copleykj/react-native-meteor#react-native) for necessary instructions.
 
 ## Configuration
 
