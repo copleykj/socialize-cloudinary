@@ -25,9 +25,9 @@
   },
   "homepage": "https://github.com/copleykj/socialize-cloudinary#readme",
   "dependencies": {
-    "@socialize/react-native-meteor": "^2.0.2",
-    "cloudinary-core": "^2.11.1",
-    "cloudinary": "^1.22.0"
+    "@socialize/react-native-meteor": "^3.0.2",
+    "cloudinary-core": "^2.11.4",
+    "cloudinary": "^1.26.1"
   },
   "devDependencies": {
     "rimraf": "^3.0.2"
