@@ -8,5 +8,4 @@ import CloudinaryConstruct from './cloudinary.js';
 
 const Cloudinary = CloudinaryConstruct({ Meteor, Mongo, Promise });
 
-
 export { Cloudinary };
