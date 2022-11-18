@@ -77,13 +77,19 @@ When using this package with React Native there is some minor setup required by 
 
 ### Settings.json
 
-First thing you'll want to do is set up some place to hold your configuration values outside your application code. Here we'll use Meteor settings.
+First thing you'll want to do is set up some place to hold your configuration values outside your application code.
+
+Here we use Meteor settings.
+
+> __Note__
+>
+> If you create your settings file in Meteor with the exact keys as shown below, this package will auto setup your cloudinary and you will not need to call `Cloudinary.config()`
 
 ```json
 {
   "public": {
     "cloudinary": {
-      "cloud_name": "cloud-name",
+      "cloudName": "cloud-name",
     }
   },
   "cloudinary": {
@@ -96,6 +102,10 @@ First thing you'll want to do is set up some place to hold your configuration va
 ### Server
 
 Make note that Cloudinary.config takes a slightly different shaped object on the server than it does on the client.
+
+> __Note__
+>
+> If Meteor.settings is setup as specified above you will not need to call `Cloudinary.config()`. See note about auto configuration above.
 
 ``` javascript
 import { Cloudinary } from 'meteor/socialize:cloudinary';
@@ -131,6 +141,10 @@ Cloudinary.rules.download_url = function (publicId) {
 ### Client
 
 On the client side, the config method takes an object with a `cloud` key which contains a key `cloudName`. No other configuration values are necessary and you should take care not to expose your api key and secret to the client.
+
+> __Note__
+>
+> If Meteor.settings is setup as specified above you will not need to do this step. See note about auto configuration above.
 
 ```javascript
 import { Cloudinary } from 'meteor/socialize:cloudinary';

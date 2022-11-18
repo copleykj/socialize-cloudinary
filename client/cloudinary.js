@@ -1,4 +1,5 @@
 import { Cloudinary as Original } from '@cloudinary/url-gen';
+import { Meteor } from 'meteor/meteor';
 
 export default ({ Meteor, Mongo, Promise }) => {
   const callWithPromise = (method, ...myParameters) => new Promise((resolve, reject) => {
@@ -10,7 +11,9 @@ export default ({ Meteor, Mongo, Promise }) => {
 
   const _privateUrls = {};
   const _expiringUrls = {};
-  let cloudinary = null;
+
+  const cloudName = Meteor.settings.public?.cloudinary?.cloudName;
+  let cloudinary = cloudName ? new Original({ cloud: { cloudName } }) : null;
 
   function Cloudinary () {
     if (cloudinary !== null) {
