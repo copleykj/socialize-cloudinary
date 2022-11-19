@@ -1,5 +1,4 @@
 import { Cloudinary as Original } from '@cloudinary/url-gen';
-import { Meteor } from 'meteor/meteor';
 
 export default ({ Meteor, Mongo, Promise }) => {
   const callWithPromise = (method, ...myParameters) => new Promise((resolve, reject) => {

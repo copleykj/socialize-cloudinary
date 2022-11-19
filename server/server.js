@@ -49,9 +49,6 @@ Meteor.methods({
   },
 });
 
-
-
-
 const cloud_name = Meteor.settings.public?.cloudinary?.cloudName;
 const api_key = Meteor.settings?.cloudinary?.api_key;
 const api_secret = Meteor.settings?.cloudinary?.api_secret;
