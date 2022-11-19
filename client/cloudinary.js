@@ -13,6 +13,7 @@ export default ({ Meteor, Mongo, Promise }) => {
   const _expiringUrls = {};
 
   const cloudName = Meteor.settings.public?.cloudinary?.cloudName;
+  console.log(Meteor.settings);
   let cloudinary = cloudName ? new Original({ cloud: { cloudName } }) : null;
 
   function Cloudinary () {
@@ -95,7 +96,7 @@ export default ({ Meteor, Mongo, Promise }) => {
         percent_uploaded: 0,
         groupId,
       });
-        // listen for progress event
+      // listen for progress event
       xhr.upload.addEventListener('progress', function onProgress (event) {
         Cloudinary.collection.update(collectionId, {
           $set: {
