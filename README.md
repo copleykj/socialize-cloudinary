@@ -44,7 +44,7 @@ Finding the time to maintain FOSS projects can be quite difficult. I am myself r
 
 ## Meteor Installation
 
-Cloudinary is built on [Cloudinary (NPM)](https://github.com/cloudinary/cloudinary_npm) and [Cloudinary (JS)](https://github.com/cloudinary/cloudinary_core). These packages must be installed from NPM for this package to work.
+This package is built on [Cloudinary (NPM)](https://github.com/cloudinary/cloudinary_npm) and [Cloudinary URL Gen](https://github.com/cloudinary/js-url-gen). These packages must be installed from NPM for this package to work.
 
 ``` shell
 meteor npm install --save cloudinary cloudinary-core
@@ -53,7 +53,7 @@ meteor add socialize:cloudinary
 
 ## NPM Installation
 
-When installing the npm package, npm takes care of installing cloudinary deps and theres no need to install them like is necessary inside the Meteor app.
+When installing the npm package for use outside Meteor, npm takes care of installing cloudinary deps and theres no need to install them like is necessary inside the Meteor app.
 
 ```shell
 npm install --save @socialize/cloudinary
@@ -75,15 +75,49 @@ When using this package with React Native there is some minor setup required by 
 
 ## Configuration
 
+### Settings.json
+
+First thing you'll want to do is set up some place to hold your configuration values outside your application code.
+
+Here we use Meteor settings.
+
+> __Note__
+>
+> If you create your settings file in Meteor with the exact keys as shown below, this package will auto setup your cloudinary and you will not need to call `Cloudinary.config()`
+
+```json
+{
+  "public": {
+    "cloudinary": {
+      "cloudName": "cloud-name",
+    }
+  },
+  "cloudinary": {
+    "api_key": "api-key",
+    "api_secret": "api-secret"
+  }
+}
+```
+
 ### Server
+
+Make note that Cloudinary.config takes a slightly different shaped object on the server than it does on the client.
+
+> __Note__
+>
+> If Meteor.settings is setup as specified above you will not need to call `Cloudinary.config()`. See note about auto configuration above.
 
 ``` javascript
 import { Cloudinary } from 'meteor/socialize:cloudinary';
 
+// Destructure the Meteor.settings object from the shape specified above
+const { cloudinary: { api_key, api_secret }, public: { cloudinary: { cloud_name } } } = Meteor.settings
+
+// Call Cloudinary.config with the destructured values
 Cloudinary.config({
-  cloud_name: 'cloud_name',
-  api_key: '1237419',
-  api_secret: 'asdf24adsfjk',
+  cloud_name,
+  api_key,
+  api_secret,
 });
 
 // Rules are bound to the connection from which they are are executed. This means you have a userId available as this.userId if there is a logged in user. Throw a new Meteor.Error to stop the method from executing and propagate the error to the client. If rule is not set a standard error will be thrown.
@@ -106,14 +140,23 @@ Cloudinary.rules.download_url = function (publicId) {
 
 ### Client
 
+On the client side, the config method takes an object with a `cloud` key which contains a key `cloudName`. No other configuration values are necessary and you should take care not to expose your api key and secret to the client.
+
+> __Note__
+>
+> If Meteor.settings is setup as specified above you will not need to do this step. See note about auto configuration above.
+
 ```javascript
 import { Cloudinary } from 'meteor/socialize:cloudinary';
 
-Cloudinary.config({
-  cloud_name:'cloud_name',
-  api_key: 'Your Key Here',
-});
+const { public: { cloudinary: { cloud_name: cloudName } } } = Meteor.settings
 
+
+Cloudinary.config({
+  cloud: {
+    cloudName,
+  },
+});
 ```
 
 ## Uploading
@@ -137,20 +180,44 @@ class Uploader extends Component {
 }
 ```
 
-### Uploads Collection
+## Uploads Collection
 
 All uploads are stored in `Cloudinary.collection` with the following fields.
 
 ```js
 {
-  status: 'uploading', // status of the upload
-  loaded: 935, // how much of the file has been uploaded so far
-  total: 10000, // the total size of the file
-  percent_uploaded: 9
+  status: 'complete',
+  percent_uploaded: 100,
+  groupId: "general",
+  loaded: 844109,
+  total: 844109,
+  response: { // Only present on complete uploads
+    asset_id: "0abc9b1e775694d08abfabb9ce590a84",
+    public_id: "eusvz5ttdwpgo5blp3ko",
+    version: 1666662135,
+    version_id: "55c7b72ec0685d68e730a043878cf9d1",
+    signature: "59d77f9fa0b745aaa10e53532033d62340367c2d",
+    width: 2048,
+    height: 1536,
+    format: "jpg",
+    resource_type: "image",
+    created_at: "2022-10-25T01:42:15Z",
+    tags: [],
+    "ytes: 632699,
+    type: "upload",
+    etag: "3e0021608455fe13342fcb9866fab232",
+    placeholder: false,
+    url: "http://res.cloudinary.com/dpf7hzqcl/image/upload/v1666662135/eusvz5ttdwpgo5blp3ko.jpg",
+    secure_url: "https://res.cloudinary.com/dpf7hzqcl/image/upload/v1666662135/eusvz5ttdwpgo5blp3ko.jpg",
+    folder: "",
+    api_key: "383564773967721"
+  }
 }
 ```
 
-The status field can be one of `uploading`, `complete`, `error`, `aborted`. Matching on this field lets you easily find and display files that are uploading.
+### Uploads Collection Statuses
+
+The status field can be one of `uploading`, `complete`, `error`, `aborted`. Matching on this field lets you easily find and display files that are uploading, complete, or errored.
 
 ```js
 import { Cloudinary } from 'meteor/socialize:cloudinary';
@@ -158,29 +225,36 @@ import { Cloudinary } from 'meteor/socialize:cloudinary';
 const uploadingFiles = Cloudinary.collection.find({status:'uploading'});
 
 const completedFiles = Cloudinary.collection.find({status:'complete'});
+
+const completedFiles = Cloudinary.collection.find({status:'error'});
 ```
 
 ## Manipulating and Displaying
 
-All of Cloudinary's manipulation options can be passed to the `Cloudinary.url` and `Cloudinary.privateUrl` Methods which can be used to generate a url for an `<img>` tags src attribute
+As of version 2 of this package we no longer use the `cloudinary-core` package and instead have moved to using `@cloudinary/url-gen` to generate urls. This allows better tree shaking for smaller bundle sizes as well as the usage of front end specific cloudinary libraries like `@cloudinary/react`.
+
+Because we need to access the Cloudinary instance created from the `Cloudinary` constructor provided by the `@cloudinary/url-gen` package, you'll need to call the `Cloudinary` function exported from this package to get the instance. This is done by calling `Cloudinary()`.
 
 ```jsx
-<img src={Cloudinary.url(public_id)}>
-<img src={Cloudinary.privateUrl(public_id)}>
-```
+//import necessary packages
+import { Cloudinary } from 'meteor/socialize:cloudinary';
+import { thumbnail } from "@cloudinary/url-gen/actions/resize";
+import {AdvancedImage} from '@cloudinary/react';
 
-You can manipulate an image by adding parameters to the helper
-
-```jsx
-<img src={Cloudinary.url(public_id, {effect:'blur:300' angle:"10"})}">
+const Avatar = ({publicId}) => {
+  const img = Cloudinary().image(publicId).resize(thumbnail().width(50).height(50)).format('jpg');
+  return (
+    <AdvancedImage cldImg={url} />
+  );
+}
 ```
 
 For more information see the cloudinary's documentation:
-[http://cloudinary.com/documentation/image_transformations#crop_modes](http://cloudinary.com/documentation/image_transformations)
+[https://cloudinary.com/documentation/javascript_integration](<https://cloudinary.com/documentation/javascript_integration>
 
 ## Deleting From Cloudinary
 
-Just pass the public_id of the image or file through this function. It will return an object with a list of the images deleted as a result.
+Just pass the public_id to the `Cloudinary.delete` method. Be sure to set `Cloudinary.rules.delete` to your own function that implements permission logic for deleting stored files. If you don't set this rule, a standard error will be thrown and the delete will not be executed.
 
 ```javascript
 // client side
@@ -220,42 +294,47 @@ App.accessRule("blob:*");
 
 ## API
 
-- Cloudinary.config(options) __required__:
-  - cloud_name: Name of your cloud
-    - api_key: Your Cloudinary API Key
-    - api_secret: Your Cloudinary API Secret - only set this on the server
+- Cloudinary(): calling the package export as a function returns the Cloudinary instance created from the `@cloudinary/url-gen` package
 
-- async Cloudinary.uploadFile(dataUrl, config = { groupId: 'general', options: {}, callback: null }) **(CLIENT)**: returns a promise that resolves to a json object containing information about the uploaded resource
+- Cloudinary.config(options) __required__:
+
+  Server Options:
+  - cloud_name: string containing the name of your cloud
+  - api_key: string containing your api key
+  - api_secret: string containing your api secret
+
+  Client Options:
+  - cloud: object with a key `cloudName`
+    - cloudName: string containing the name of your cloud
+- async Cloudinary.uploadFile(dataUrl, config = { groupId: 'general', options: {}, callback: null }) __(CLIENT)__: returns a promise that resolves to a json object containing information about the uploaded resource
   - dataUrl: A file that has been read as a data url
   - config: An object containing the upload configuration.
     - groupId: A string to group uploads by. This makes finding uploads that should be grouped together easier. By default the groupId is 'general'
     - options: The cloudinary configuration options
     - callback: A callback to execute if you don't wish to use async/await
 
-- async Cloudinary.uploadFiles(files, config = { groupId: 'general', options: {}, callback: null }) **(CLIENT)**: returns an array of promises that each resolves to a json object containing information about the uploaded resource
+- async Cloudinary.uploadFiles(files, config = { groupId: 'general', options: {}, callback: null }) __(CLIENT)__: returns an array of promises that each resolves to a json object containing information about the uploaded resource
   - files: An instance of, or array of instances of `File` or `Blob`
   - config: An object containing the upload configuration.
     - groupId: A string to group uploads by. This makes finding uploads that should be grouped together easier. By default the groupId is 'general'
     - options: The cloudinary configuration options
     - callback: A callback to execute if you don't wish to use async/await
 
-- Cloudinary.url(public_id, options) **(CLIENT)**: returns a generated url
+- async Cloudinary.privateUrl(public_id, options) __(CLIENT)__: returns a promise which resolves to a signed URL
   - public_id: The public ID returned after uploading a resource
   - options: A set of transformations described here [http://cloudinary.com/documentation/image_transformations#reference](http://cloudinary.com/documentation/image_transformations#reference)
 
-- async Cloudinary.privateUrl(public_id, options) **(CLIENT)**: returns a promise which resolves to a signed URL
-  - public_id: The public ID returned after uploading a resource
-  - options: A set of transformations described here [http://cloudinary.com/documentation/image_transformations#reference](http://cloudinary.com/documentation/image_transformations#reference)
-
-- async Cloudinary.downloadUrl(public_id) **(CLIENT)**: returns a promise that resolves to a url that will expire in 1 hour, does not take any transformations
+- async Cloudinary.downloadUrl(public_id) __(CLIENT)__: returns a promise that resolves to a url that will expire in 1 hour, does not take any transformations
   - public_id: The public ID returned after uploading a resource
 
-- async Cloudinary.delete(public_id, type) **(CLIENT)**: returns a promise that resolves to json object containing information about the resource that was deleted.
+- async Cloudinary.delete(public_id, type) __(CLIENT)__: returns a promise that resolves to json object containing information about the resource that was deleted.
   - public_id: The public ID returned after uploading a resource
   - type: The type that was specified when the resource was uploaded
 
-- Cloudinary.rules **(SERVER)** __required__: This is a javascript object of rules as functions
+- Cloudinary.rules __(SERVER)__ __required__: This is a javascript object of rules as functions
   - Cloudinary.rules.delete: Checks whether deleting a resource is allowed. Throw a `Meteor.Error` to disallow this action
   - Cloudinary.rules.sign_upload: Checks whether uploading a resource is allowed. Throw a `Meteor.Error` to disallow this action
   - Cloudinary.rules.private_resource: Checks whether getting a private resource is allowed. Throw a `Meteor.Error` to disallow this action
   - Cloudinary.rules.download_url: Checks whether fetching a download link for a resource is allowed. Throw a `Meteor.Error` to disallow this action
+
+[meteor]: https://www.meteor.com

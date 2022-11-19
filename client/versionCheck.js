@@ -2,5 +2,5 @@
 import { checkNpmVersions } from 'meteor/tmeasday:check-npm-versions';
 
 checkNpmVersions({
-    'cloudinary-core': '2.11.x',
+  '@cloudinary/url-gen': '1.8.x',
 }, 'socialize:cloudinary');
