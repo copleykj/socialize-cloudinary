@@ -53,8 +53,8 @@ Meteor.methods({
 
 
 const cloud_name = Meteor.settings.public?.cloudinary?.cloudName;
-const api_key = Meteor.settings.private?.cloudinary?.api_key;
-const api_secret = Meteor.settings.private?.cloudinary?.api_secret;
+const api_key = Meteor.settings?.cloudinary?.api_key;
+const api_secret = Meteor.settings?.cloudinary?.api_secret;
 
 if (cloud_name && api_key && api_secret) {
   Cloudinary.config({
