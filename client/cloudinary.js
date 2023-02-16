@@ -12,7 +12,6 @@ export default ({ Meteor, Mongo, Promise }) => {
   const _expiringUrls = {};
 
   const cloudName = Meteor.settings.public?.cloudinary?.cloudName;
-  console.log(Meteor.settings);
   let cloudinary = cloudName ? new Original({ cloud: { cloudName } }) : null;
 
   function Cloudinary () {
