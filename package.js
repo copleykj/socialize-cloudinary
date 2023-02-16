@@ -2,7 +2,7 @@
 Package.describe({
   name: 'socialize:cloudinary',
   summary: 'Upload and manipulate files with the Cloudinary API and async/await',
-  version: '2.0.2',
+  version: '2.0.3',
   git: 'https://github.com/copleykj/socialize-cloudinary',
 });
 
